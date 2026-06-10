@@ -27,11 +27,11 @@ class Triekey {
         }
     }
 
-    public addSequence(key: string) {
+    public addSequence(key: string, action: () => void) {
         if (key.length === 0) {
             throw new Error("Empty keys are not allowed.");
         }
-        this._trie.add(key, () => console.log("test"));
+        this._trie.add(key, action);
     }
 
     public removeSequence() {

@@ -1,17 +1,17 @@
-import type { Nonnull } from "./nullability.js";
 import { TrieNode } from "./trieNode.js";
+import { Buffer } from "./buffer.js";
 
 class Triekey {
-
-    private _trie: Nonnull<TrieNode>;
-    private _buffer: Nonnull<string>;
-
-    private _maxSeqLen: Nonnull<number>;
+    private _trie: TrieNode;
+    private _buffer: Buffer;
 
     public constructor() {
         this._trie = new TrieNode();
-        this._buffer = "";
-        this._maxSeqLen = 0;
+        this._buffer = new Buffer(this._trie);
+    }
+
+    public setDebounceTimer(value: number) {
+        this._buffer.debounceTimer = value;
     }
 
     public start() {
@@ -20,29 +20,18 @@ class Triekey {
         });
     }
 
-    public handleKeyDown(event: Nonnull<KeyboardEvent>) {
+    public handleKeyDown(event: KeyboardEvent) {
         const key = event.key;
         if (key >= 'a' && key <= 'z') {
-            if (this._buffer.length < this._maxSeqLen) {
-                this._buffer += key;
-                const match = this._trie.search(this._trie, this._buffer);
-                if (match) {
-                    this._buffer = "";
-                    match();
-                }
-            } else {
-                this._buffer = "";
-            }
+            this._buffer.addToBuffer(key);
         }
     }
 
-    public addSequence(key: Nonnull<string>) {
+    public addSequence(key: string) {
         if (key.length === 0) {
             throw new Error("Empty keys are not allowed.");
         }
-
-        this._maxSeqLen = key.length;
-        this._trie.add(this._trie, key, () => console.log("yeep"));
+        this._trie.add(key, () => console.log("test"));
     }
 
     public removeSequence() {

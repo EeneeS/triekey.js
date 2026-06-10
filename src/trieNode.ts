@@ -1,48 +1,46 @@
-import type { Nonnull, Nullable } from "./nullability.js";
-
 export class TrieNode {
+    private children = new Map<string, TrieNode>();
+    private isEndOfSequence = false;
+    private action: (() => void) | null = null;
 
-    private children: Array<Nullable<TrieNode>>;
-    private isEndOfSequence: Nonnull<boolean>;
-    private action: Nullable<() => void>;
-
-    constructor() {
-        this.children = new Array(26).fill(null);
-        this.isEndOfSequence = false;
+    private static indexOf(char: string): number {
+        const index = char.charCodeAt(0) - "a".charCodeAt(0);
+        if (index < 0 || index >= 26) {
+            return -1;
+        }
+        return index;
     }
 
-    public add(root: Nonnull<TrieNode>, key: Nonnull<string>, action: Nonnull<() => void>): void {
-        let current = root;
-        
-        for (let char of key) {
-            let index = char.charCodeAt(0) - "a".charCodeAt(0);
+    public add(key: string, action: () => void): void {
+        let current: TrieNode = this;
 
-            if (current.children[index] === null) {
-                const newNode = new TrieNode();
-                current.children[index] = newNode;
+        for (const char of key) {
+            if (TrieNode.indexOf(char) === -1) return;
+
+            if (!current.children.has(char)) {
+                current.children.set(char, new TrieNode());
             }
 
-            current = current.children[index]!;
+            current = current.children.get(char)!;
         }
 
         current.isEndOfSequence = true;
         current.action = action;
     }
 
-    public search(root: Nonnull<TrieNode>, key: Nonnull<string>): Nullable<() => void> {
-        let current = root;
+    public search(key: string): (() => void) | null {
+        let current: TrieNode = this;
 
-        for (let char of key) {
-            let index = char.charCodeAt(0) - "a".charCodeAt(0);
+        for (const char of key) {
 
-            if (current.children[index] === null) {
-                return null;
-            }
+            if (TrieNode.indexOf(char) === -1) return null;
 
-            current = current.children[index]!;
+            const next = current.children.get(char);
+            if (!next) return null;
+
+            current = next;
         }
 
         return current.isEndOfSequence ? current.action : null;
     }
-
 }

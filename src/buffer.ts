@@ -34,8 +34,8 @@ export class Buffer {
     private searchMatch() {
         const match = this._trie.search(this._buffer);
 
-        if (match) {
-            match();
+        if (match && match.action && match.doAction) {
+            match.action();
             this.clear();
             return;
         }

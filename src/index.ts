@@ -34,13 +34,16 @@ class Triekey {
         this._trie.add(key, action);
     }
 
-    public removeSequence() {
+    public removeSequence(key: string) {
+        this._trie.remove(key);
     }
 
-    public enableSequence() {
+    public enableSequence(key: string) {
+        this._trie.enable(key);
     }
 
-    public disableSequence() {
+    public disableSequence(key: string) {
+        this._trie.disable(key);
     }
 
 }

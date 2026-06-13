@@ -56,6 +56,18 @@ triekey.addSequence("secret", () => {
 });
 ```
 
+### `removeSequence(key: string)`
+
+Removes a sequence.
+
+### `disableSequence(key: string)`
+
+Disables a sequence.
+
+### `enableSequence(key: string)`
+
+Enables a sequence.
+
 ### `setDebounceTimer(value: number): void`
 
 Sets how long (in milliseconds) triekey waits after the last valid key before clearing the input buffer.
